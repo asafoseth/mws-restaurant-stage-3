@@ -15,7 +15,6 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
   <title>Restaurant Info</title>
 </head>
-
 <body class="inside">
   <!-- Beginning header -->
   <header>
@@ -49,6 +48,37 @@
     </section>
     <!-- end restaurant -->
     <!-- Beginning reviews -->
+     <!--Begin Form for user reviews-->
+     <section id="reveiws-form">
+     <form method="" action="">
+        <h3>Submit Review</h3>
+        <label id="label3" for="username">Your name:</label><br>
+        <input id="username" type="text" name="name"><br>
+        <label id="label3" for="ratings">Rate restaurant:</label><br>
+        <div id="ratings" class="txt-center">
+          <form>
+                <div class="rating">
+                    <input id="star5" name="star" type="radio" value="5" class="radio-btn hide" />
+                    <label for="star5" >☆</label>
+                    <input id="star4" name="star" type="radio" value="4" class="radio-btn hide" />
+                    <label for="star4" >☆</label>
+                    <input id="star3" name="star" type="radio" value="3" class="radio-btn hide" />
+                    <label for="star3" >☆</label>
+                    <input id="star2" name="star" type="radio" value="2" class="radio-btn hide" />
+                    <label for="star2" >☆</label>
+                    <input id="star1" name="star" type="radio" value="1" class="radio-btn hide" />
+                    <label for="star1" >☆</label>
+                    <div class="clear"></div>
+                </div>
+            </form>
+        </div>
+        <br>
+        <label id="label3" for="user-review">Review:</label><br>
+        <textarea id="user-review" name="comment_text"></textarea><br>
+        <input type="submit" value="Submit">	
+      </form>
+    <!--End reveiw form-->
+    </section>
     <section id="reviews-container">
       <ul id="reviews-list"></ul>
     </section>
@@ -75,5 +105,4 @@
   <!-- End scripts -->
 
 </body>
-
 </html>
