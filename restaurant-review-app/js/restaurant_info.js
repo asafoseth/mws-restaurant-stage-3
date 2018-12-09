@@ -68,6 +68,23 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
+  //create a fourite toggle for restaurant
+  const restaurantHeader = document.getElementsByClassName('restaurant-header')[0];
+  const is_fav = (restaurant["is_fav"] && restaurant["is_fav"].toString() === "true") ? true : false;
+  const fav = document.createElement('button');
+  fav.style.background = is_fav ? `url("/img/fav.svg") no-repeat`
+    : `url("/img/unfav.svg") no-repeat`;
+    if (is_fav){
+      fav.setAttribute('aria-label', `${restaurant.name} favorite`);
+    }
+    else{
+      fav.setAttribute('aria-label', `${restaurant.name} is not favorite`);
+    }
+    fav.id = `fav-icon-${restaurant.id}`;
+    fav.onclick = event => onFavClick(restaurant.id, !is_fav);
+    restaurantHeader.appendChild(fav);
+
+
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
 
@@ -180,3 +197,39 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+const onFavClick = (id, fav_status) => {
+  const fav = document.getElementById(`fav-icon-${id}`);
+  console.log(`onclick info: ${self.restaurant[id]}`);
+  let restaurant = self.restaurant;
+  restaurant["is_favorite"] = favStatus;
+  if(!favStatus) {
+    fav.setAttribute('aria-label',`${restaurant.name} not favorite`);
+    fav.style.background = `url(/img/fav.svg) no-repeat`;
+  } else {
+    fav.setAttribute('aria-label', `${restaurant.name} favorite`);
+    fav.style.background = `url(/img/unfav.svg) no-repeat`;
+  }
+
+  DBHelper.updateRestaurantIDB(restaurant, (error, result) => {
+    if(error){
+      console.log(`Error updating favorite status for ${restaurant.name}: ${error}`);
+    }
+    console.log(result)
+  });
+  fav.onclick = event => onFavClick(id, !fav_status);
+}
+
+const submitReview = document.getElementById('submit-review')[0];
+submitReview.addEventListener('click',function(){
+  const name = document.getElementById('username')[0].value;
+  const rating = document.getElementsByName('star')[0].value;
+  const comment = document.getElementById('user-review')[0].value;
+
+  DBHelper.saveReview(self.restaurant.id, name, rating, comment, (error, result) => {
+    if(error){
+      console.log(`Error while saving review: ${error}`);
+    }
+    window.location.href=`/restaurant.html?id=${self.restaurant.id}`;
+  });
+});
