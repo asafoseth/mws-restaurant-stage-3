@@ -40,7 +40,9 @@
     <!-- End map -->
     <!-- Beginning restaurant -->
     <section id="restaurant-container">
-      <h2 id="restaurant-name"></h2>
+      <div class="restaurant-header">
+        <h2 id="restaurant-name"></h2>
+      </div>
       <img id="restaurant-img">
       <p id="restaurant-cuisine"></p>
       <p id="restaurant-address"></p>
@@ -50,13 +52,12 @@
     <!-- Beginning reviews -->
      <!--Begin Form for user reviews-->
      <section id="reveiws-form">
-     <form method="" action="">
-        <h3>Submit Review</h3>
+     <form>
+        <h3 id="form-title">Submit Review</h3>
         <label id="label3" for="username">Your name:</label><br>
         <input id="username" type="text" name="name"><br>
         <label id="label3" for="ratings">Rate restaurant:</label><br>
         <div id="ratings" class="txt-center">
-          <form>
                 <div class="rating">
                     <input id="star5" name="star" type="radio" value="5" class="radio-btn hide" />
                     <label for="star5" >☆</label>
@@ -70,12 +71,11 @@
                     <label for="star1" >☆</label>
                     <div class="clear"></div>
                 </div>
-            </form>
         </div>
         <br>
         <label id="label3" for="user-review">Review:</label><br>
         <textarea id="user-review" name="comment_text"></textarea><br>
-        <input type="submit" value="Submit">	
+        <button id="submit-review">Submit</button>
       </form>
     <!--End reveiw form-->
     </section>
@@ -100,6 +100,8 @@
   <script type="text/javascript" src="js/restaurant_info.js"></script>
   <!--INDEX DB script-->
   <script type="text/javascript" src="js/idb.js"></script>
+  <!--FORM Submission script-->
+  <script type="text/javascript" src="js/post-review.js"></script>
   <!-- Google Maps -->
  <!--  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_tKbW6A5pQ-eupxI56myUnHLqYCzOjKo&libraries=places&callback=initMap"></script> -->
   <!-- End scripts -->
