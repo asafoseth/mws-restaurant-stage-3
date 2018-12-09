@@ -349,6 +349,7 @@ nav h1 a {
   color:red;
 }
 
+
 /*Media query for Details */
 @media screen and (max-width: 599px) { 
 
@@ -459,3 +460,92 @@ nav h1 a {
     width: 80%;
 }
 }
+
+/*Style for reveiw form
+*/
+#username {
+  margin-left: 25px;
+	padding: 12px 20px;
+	box-sizing: border-box;
+	border: 2px solid green;
+	border-radius: 4px;
+}
+#user-review {
+  width: 20%;
+  padding: 10px 15px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+  resize: none;
+  border-radius: 5px;
+  margin-left: 25px;
+}
+
+#label1, #label2, #label3 {
+  margin-left: 25px;
+}
+
+input[type=button], input[type=submit], input[type=reset] {
+  background-color: #4CAF50;
+   border: none;
+   color: white;
+   padding: 14px 30px;
+   text-decoration: none;
+   margin-left: 25px;
+   cursor: pointer;
+   border-radius: 5px;
+}
+input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
+ color: green;
+}
+
+.txt-center {
+  text-align: left;
+  font-size: 30pt;
+}
+.hide {
+  display: none;
+}
+
+.clear {
+  float: none;
+  clear: both;
+}
+
+.rating {
+    width: 20%;
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    text-align: center;
+    position: relative;
+    margin-left: -50px; 
+}
+
+.rating > label {
+    float: right;
+    display: inline;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    width: 1.1em;
+    cursor: pointer;
+    color: #000;
+}
+
+.rating > label:hover,
+.rating > label:hover ~ label,
+.rating > input.radio-btn:checked ~ label {
+    color: transparent;
+}
+
+.rating > label:hover:before,
+.rating > label:hover ~ label:before,
+.rating > input.radio-btn:checked ~ label:before,
+.rating > input.radio-btn:checked ~ label:before {
+    content: "\2605";
+    position: absolute;
+    left: 0;
+    color: #FFD700;
+}
+
