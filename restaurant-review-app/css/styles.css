@@ -486,7 +486,7 @@ nav h1 a {
   margin-left: 25px;
 }
 
-input[type=button], input[type=submit], input[type=reset] {
+input[type=button], input[type=submit], input[type=reset],#submit-review {
   background-color: #4CAF50;
    border: none;
    color: white;
@@ -496,7 +496,7 @@ input[type=button], input[type=submit], input[type=reset] {
    cursor: pointer;
    border-radius: 5px;
 }
-input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
+input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, #submit-review:hover {
  color: green;
 }
 
