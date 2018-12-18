@@ -1,4 +1,3 @@
-
 /**
  * Common database helper functions.
  * Fetch all restaurant data needed by app asyncrounously from external server.
@@ -13,19 +12,28 @@
         );
         return Promise.resolve();
       }
-
-      let indexDB = idb.open("restaurantsDb", 1, upgradeDb => {
-        const store = upgradeDb.createObjectStore("restaurants", {
-          keypath: "id"
-        });
-        store.createIndex("res_data", "id");
-      });
-      return indexDB;
     }
+
+      static dbPromise() {
+      return idb.open("db", 2, upgradeDb => {
+        switch (upgradeDb.oldVersion) {
+          case 0:
+            upgradeDb.createObjectStore("restaurants", {
+            keypath: "id"
+          });
+          case 1:
+            const reviewStore = upgradeDb.createObjectStore('reviews', {
+              keypath: 'id'
+            });
+          reviewStore.createIndex("res_info", "res_id");
+        }
+        });
+      }
 
     //using fetch api to fetch data from server
     static fetchRestaurantsfromServer() {
-      return fetch('http://localhost:1337/restaurants').then(function(response) {
+      return fetch('http://localhost:1337/restaurants')
+      .then(function(response) {
         return response.json()
         }).then(restaurants =>{
               DBHelper.storeRestaurantsInDB(restaurants);
@@ -35,9 +43,9 @@
 
     //Save fetched restaurant data and store in idb
     static storeRestaurantsInDB(restaurants_data){
-      return DBHelper.openDatabase().then(database => {
-        if(!database) return;
-        const tx = database.transaction("restaurants", "readwrite");
+      return DBHelper.dbPromise().then(db => {
+        if(!db) return;
+        const tx = db.transaction("restaurants", "readwrite");
         const store = tx.objectStore("restaurants");
         restaurants_data.forEach(restaurant => {
           store.put(restaurant, restaurant.id);
@@ -48,11 +56,11 @@
 
     // Fetch restaurants stored from idb
     static fetchStoredRestaurants(){
-      return DBHelper.openDatabase().then(database => {
-        if(!database){
+      return DBHelper.dbPromise().then(db => {
+        if(!db){
           return;
         }
-        let store = database
+        let store = db
         .transaction("restaurants")
         .objectStore("restaurants");
 
@@ -212,6 +220,105 @@ static fetchRestaurants(callback) {
       })
       marker.addTo(newMap);
     return marker;
-  } 
-
   }
+
+//Update Favorite Status
+static updateFavoriteStatus(restaurantId, isFavorite) {
+  console.log('Changing Restaurant status to: ', isFavorite);
+
+  fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${isFavorite}`, {
+    method: 'PUT'
+  })
+  .then(() => {
+    console.log('Status chanaged');
+    this.dbPromise()
+      .then(db => {
+        const tx = db.transaction('restaurants', 'readwrite');
+        const restaurantStore = tx.objectStore('restaurants');
+        restaurantStore.get(restaurantId)
+          .then(restaurant => {
+            restaurant.is_Favorite = isFavorite;
+            restaurantStore.put(restaurant);
+          });
+      })
+  })
+}
+
+//Fetch Reviews
+static fetchReviewsByResId(id) {
+  return fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`)
+    .then(response => response.json())
+    .then(reviews => {
+      this.dbPromise()
+        .then(db => {
+          if (!db) return;
+
+          let tx = db.transaction('reviews', 'readwrite');
+          const store = tx.objectStore('reviews');
+          if (Array.isArray(reviews)) {
+            reviews.forEach(function(review) {
+              store.put(review);
+            });
+          } else {
+            store.put(reviews);
+          }
+        });
+      console.log('Reviews: ', reviews);
+      return Promise.resolve(reviews);
+    })
+    .catch(error => {
+      return DBHelper.getStoredObjectById('reviews', 'restaurant', id)
+        .then((storedReviews) => {
+          console.log('Getting offline version');
+          return Promise.resolve(storedReviews);
+        })
+    });
+}
+
+//Fetch stored reviews from idb
+static getStoredObjectById(table, idx, id) {
+  return this.dbPromise()
+    .then(function(db) {
+      if (!db) return;
+
+      const store = db.transaction(table).objectStore(table);
+      const indexId = store.index(idx);
+      return indexId.getAll(id);
+    });
+}
+
+static addReview(review) {
+  let offline_obj = {
+    name: 'addReview',
+    data: review,
+    object_type: 'review'
+  };
+
+  //check if online
+ if (!navigator.onLine  && (offline_obj.name === 'addReview')) {
+  DBHelper.sendDataWhenOnline(offline_obj);
+  return;
+}
+let reviewSend = {
+  "name": review.name,
+  "rating": parseInt(review.rating),
+  "comments": review.comments,
+  "restaurant_id": parseInt(review.restaurant_id) 
+ };
+ console.log('Sending review: ', reviewSend);
+ var fetch_options = {
+   method: 'POST',
+   body: JSON.stringify(reviewSend),
+   headers: new Headers({
+     'Content-Type': 'application/json'
+   })
+ };
+ fetch(`http://localhost:1337/reviews`, fetch_options).then((response) => {
+   const contentType = response.headers.get('content-type');
+   if (contentType && contentType.indexOf('application/json') !== -1) {
+     return response.json();
+   } else {return 'API call successfull'}})
+   .then((data) => {console.log(`Fetch successful`)})
+   .catch(error => console.log('error', error));
+  }
+}//end class

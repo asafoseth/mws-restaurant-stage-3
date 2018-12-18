@@ -157,6 +157,20 @@ createRestaurantHTML = (restaurant) => {
   name.innerHTML = restaurant.name;
   li.append(name);
 
+  //Create Favourite Restaurant
+  const favorite = document.createElement('button');
+  favorite.innerHTML = '❤';
+  favorite.classList.add("fav_btn");
+
+  favorite.onclick = function() {
+    const isFavNow = !restaurant.is_favorite;
+    DBHelper.updateFavouriteStatus(restaurant.id, isFavNow);
+    restaurant.is_favorite = !restaurant.is_favorite
+    changeFavElementClass(favorite, restaurant.is_favorite)
+  };
+  changeFavElementClass(favorite, restaurant.is_favorite)
+  li.append(favorite);
+
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
   li.append(neighborhood);
@@ -188,8 +202,25 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     }
     self.markers.push(marker);
   });
-
 } 
+
+//Toggle favorite
+changeFavElementClass = (el, fav) => {
+  if (!fav) {
+    el.classList.remove('favorite_yes');
+    el.classList.add('favorite_no');
+    el.setAttribute('aria-label', 'mark as favorite');
+  } else {
+    console.log('toggle yes upd');
+    el.classList.remove('favorite_no');
+    el.classList.add('favorite_yes');
+    el.setAttribute('aria-label', 'remove as favorite');
+  }
+}
+
+
+
+
 //registering service worker
 
     if ('serviceWorker' in navigator) {
