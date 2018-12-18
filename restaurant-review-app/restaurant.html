@@ -40,9 +40,7 @@
     <!-- End map -->
     <!-- Beginning restaurant -->
     <section id="restaurant-container">
-      <div class="restaurant-header">
         <h2 id="restaurant-name"></h2>
-      </div>
       <img id="restaurant-img">
       <p id="restaurant-cuisine"></p>
       <p id="restaurant-address"></p>
@@ -51,34 +49,29 @@
     <!-- end restaurant -->
     <!-- Beginning reviews -->
      <!--Begin Form for user reviews-->
-     <section id="reveiws-form">
-     <form>
-        <h3 id="form-title">Submit Review</h3>
-        <label id="label3" for="username">Your name:</label><br>
-        <input id="username" type="text" name="name"><br>
-        <label id="label3" for="ratings">Rate restaurant:</label><br>
-        <div id="ratings" class="txt-center">
-                <div class="rating">
-                    <input id="star5" name="star" type="radio" value="5" class="radio-btn hide" />
-                    <label for="star5" >☆</label>
-                    <input id="star4" name="star" type="radio" value="4" class="radio-btn hide" />
-                    <label for="star4" >☆</label>
-                    <input id="star3" name="star" type="radio" value="3" class="radio-btn hide" />
-                    <label for="star3" >☆</label>
-                    <input id="star2" name="star" type="radio" value="2" class="radio-btn hide" />
-                    <label for="star2" >☆</label>
-                    <input id="star1" name="star" type="radio" value="1" class="radio-btn hide" />
-                    <label for="star1" >☆</label>
-                    <div class="clear"></div>
-                </div>
+     <section id="review-section">
+       <h2 id="form-title">Add Reviews</h2>
+     <form id="review-form">
+        <label for="username">Your name:</label></br>
+        <input id="username" type="text" name="name" />
+        
+        <div class="ratings">
+          <p>Rating:</p>
+          <select aria-label="Select Rating" id="select-rating" name="Rating">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
         </div>
-        <br>
-        <label id="label3" for="user-review">Review:</label><br>
-        <textarea id="user-review" name="comment_text"></textarea><br>
-        <button id="submit-review">Submit</button>
+        <label for="user-review">Comments:</label></br>
+        <textarea id="user-review" name="comments"></textarea></br>
+        <div id="form-error"></div>
+        <button class="submit-btn" onclick="addReview()">Submit Review</button>
       </form>
-    <!--End reveiw form-->
     </section>
+    <!--End reveiw form-->
     <section id="reviews-container">
       <ul id="reviews-list"></ul>
     </section>
@@ -100,8 +93,6 @@
   <script type="text/javascript" src="js/restaurant_info.js"></script>
   <!--INDEX DB script-->
   <script type="text/javascript" src="js/idb.js"></script>
-  <!--FORM Submission script-->
-  <script type="text/javascript" src="js/post-review.js"></script>
   <!-- Google Maps -->
  <!--  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_tKbW6A5pQ-eupxI56myUnHLqYCzOjKo&libraries=places&callback=initMap"></script> -->
   <!-- End scripts -->
