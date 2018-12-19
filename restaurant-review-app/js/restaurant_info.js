@@ -193,7 +193,7 @@ addReview = () => {
   let name = document.getElementById('username').value;
   let rating;
   let comments = document.getElementById('user-review').value
-  rating = document.querySelector('#rating_select option:checked').value;
+  rating = document.querySelector('#select-rating:checked').value;
   const review = [name, rating, comments, restaurantId];
 
 
