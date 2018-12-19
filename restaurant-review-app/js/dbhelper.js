@@ -237,7 +237,7 @@ static updateFavoriteStatus(restaurantId, isFavorite) {
         const restaurantStore = tx.objectStore('restaurants');
         restaurantStore.get(restaurantId)
           .then(restaurant => {
-            restaurant.is_Favorite = isFavorite;
+            restaurant.is_favorite = isFavorite;
             restaurantStore.put(restaurant);
           });
       })
