@@ -212,6 +212,19 @@ nav h1 a {
   text-transform: uppercase;
 }
 
+/*Favorite style 
+*/
+.fav-btn {
+  border-radius: 25px;
+}
+.favorite_yes {
+  color: green;
+  
+}
+.favorite_no {
+  color: #444;
+}
+
 
 /*Media Queries for Index.html */
 @media only screen and (max-width: 600px) {
@@ -344,12 +357,60 @@ nav h1 a {
 }
 #restaurant-hours td {
   color: #666;
+  border-bottom: 1px solid #ddd;
 }
 
 #reviews-list li p .reviewer-name {
   color:red;
 }
 
+/*
+Review Form
+*/
+#review-section {
+  margin-left: 10px;
+}
+#username {
+  width: 40%;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+}
+
+#select-rating {
+  width: 40%;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+}
+
+#user-review {
+  width: 40%;
+  height: 150px;
+  padding: 12px 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  resize: none;
+}
+.submit-btn {
+  background-color: white;
+  color: black;
+  border: 2px solid #4CAF50; 
+  font-family: Arial, Helvetica, sans-serif;
+  border-radius: 4px;
+  padding: 12px 20px;
+}
+.submit-btn :hover {
+  border: rgb(5, 58, 7);
+  color: #BF1722;
+}
 
 /*Media query for Details */
 @media screen and (max-width: 599px) { 
@@ -379,8 +440,11 @@ nav h1 a {
   text-align: left;
 }
 
-
-
+#username,
+#select-rating , 
+#user-review {
+  width: 80%
+  }
 }
 @media screen and (min-width: 600px) {
 
@@ -407,6 +471,13 @@ nav h1 a {
   text-align: center;
   position: relative;
   margin-left: 50px; 
+}
+
+#username,
+#select-rating , 
+#user-review {
+  width: 60%
+  }
 
 }
 @media screen and (min-width:960px){
@@ -450,9 +521,14 @@ nav h1 a {
   }
 
   .inside #reviews-list li {
-    width: 50%;
-    
-}
+    width: 50%;  
+  }
+
+#username,
+#select-rating , 
+#user-review {
+  width: 40%
+  }
 
 }
 @media screen and (min-width: 1200px){
@@ -469,59 +545,5 @@ nav h1 a {
 
   .inside #reviews-list li {
     width: 80%;
-}
-}
-
-/*Style for reveiw form
-*/
-#username {
-  margin-left: 25px;
-	padding: 12px 20px;
-	box-sizing: border-box;
-	border: 2px solid green;
-	border-radius: 4px;
-}
-#user-review {
-  width: 20%;
-  padding: 10px 15px;
-  box-sizing: border-box;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-  background-color: #f8f8f8;
-  resize: none;
-  border-radius: 5px;
-  margin-left: 25px;
-}
-
-#label1, #label2, #label3 {
-  margin-left: 25px;
-}
-
-input[type=button], input[type=submit], input[type=reset],#submit-review {
-  background-color: #4CAF50;
-   border: none;
-   color: white;
-   padding: 14px 30px;
-   text-decoration: none;
-   margin-left: 25px;
-   cursor: pointer;
-   border-radius: 5px;
-}
-input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover, #submit-review:hover {
- color: green;
-}
-
-.txt-center {
-  text-align: left;
-  font-size: 30pt;
-}
-.hide {
-  display: none;
-}
-
-.clear {
-  float: none;
-  clear: both;
-}
-
+  }
 }
