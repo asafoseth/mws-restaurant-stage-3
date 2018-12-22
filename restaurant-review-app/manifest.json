@@ -15,7 +15,7 @@
     ],
     "start_url": "/mws-restaurant-stage-2/index.html",
     "background_color": "#252831",
-    "display": "browser",
+    "display": "standalone",
     "scope": "/mws-restaurant-stage-2/",
     "theme_color": "#317EFB"
   }
