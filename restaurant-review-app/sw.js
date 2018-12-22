@@ -1,4 +1,4 @@
-var staticCacheName = 'restaurant-review-cache-v1';
+var staticCacheName = 'restaurant-review-cache-v2';
 
 self.addEventListener('install', function(event) {
  event.waitUntil(
@@ -54,7 +54,7 @@ self.addEventListener('fetch', function(event) {
       return fetch(event.request).then(function (response) {
         let responseClone = response.clone();
         
-        caches.open('restaurant-review-cache-v1').then(function (cache) {
+        caches.open('restaurant-review-cache-v2').then(function (cache) {
           cache.put(event.request, responseClone);
         });
         return response;
