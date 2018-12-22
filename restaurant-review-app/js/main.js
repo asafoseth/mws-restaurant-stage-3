@@ -147,10 +147,40 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
+  //Lazy load image to improve app performance
   const image = document.createElement('img');
-  image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
   image.alt = restaurant.name+' image';
+
+  const config = {
+    threshold: 0.1
+  };
+
+  let observer;
+  if ('IntersectionObserver' in window) {
+    observer = new IntersectionObserver(onchange, config);
+    observer.observe(image);
+  } 
+  else {
+    console.log('Info: intersection observer not supported');
+    loadImage(image);
+  }
+  const loadImage = image => {
+    image.className = 'restaurant-img';
+    image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  }
+
+  function onchange(changes, observer) {
+    changes.forEach(change => {
+      if (change.intersectionRatio > 0) {
+        loadImage(change.target);
+        observer.unobserve(change.target);
+      }
+      else {
+
+      }
+    });
+  }
+
   li.append(image);
 
   const name = document.createElement('h2');
@@ -161,10 +191,10 @@ createRestaurantHTML = (restaurant) => {
   const favorite = document.createElement('button');
   favorite.innerHTML = '❤';
   favorite.classList.add("fav_btn");
-
+/*This method changes the favorite status when clicked*/
   favorite.onclick = function() {
-    const isFavNow = !restaurant.is_favorite;
-    DBHelper.updateFavoriteStatus(restaurant.id, isFavNow);
+    const isFavorite = !restaurant.is_favorite;
+    DBHelper.updateFavoriteStatus(restaurant.id, isFavorite);
     restaurant.is_favorite = !restaurant.is_favorite
     changeFavElementClass(favorite, restaurant.is_favorite)
   };
@@ -189,21 +219,6 @@ createRestaurantHTML = (restaurant) => {
   return li
 }
 
-/**
- * Add markers for current restaurants to the map.
- */
-addMarkersToMap = (restaurants = self.restaurants) => {
-  restaurants.forEach(restaurant => {
-    // Add marker to the map
-    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.newMap);
-    marker.on("click", onClick);
-    function onClick() {
-      window.location.href = marker.options.url;
-    }
-    self.markers.push(marker);
-  });
-} 
-
 //Toggle favorite
 changeFavElementClass = (el, fav) => {
   if (!fav) {
@@ -218,8 +233,20 @@ changeFavElementClass = (el, fav) => {
   }
 }
 
-
-
+/**
+ * Add markers for current restaurants to the map.
+ */
+addMarkersToMap = (restaurants = self.restaurants) => {
+  restaurants.forEach(restaurant => {
+    // Add marker to the map
+    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.newMap);
+    marker.on("click", onClick);
+    function onClick() {
+      window.location.href = marker.options.url;
+    }
+    self.markers.push(marker);
+  });
+} 
 
 //registering service worker
 

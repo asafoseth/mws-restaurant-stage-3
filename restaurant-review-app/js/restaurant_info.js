@@ -61,15 +61,36 @@ fetchRestaurantFromURL = (callback) => {
   }
 }
 
+/*
+Get current review 
+
+fetchReviewFromURL = (callback) => {
+  if (self.review) { // review already fetched!
+    callback(null, self.review)
+    return;
+  }
+  const id = getParameterByName('id');
+  if (!id) { // no id found in URL
+    error = 'No review id in URL'
+    callback(error, null);
+  } else {
+    DBHelper.fetchReviewsByResId(id, (error, review) => {
+      self.review = review;
+      if (!review) {
+        console.error(error);
+        return;
+      }
+      callback(null, review)
+    });
+  }
+}
+*/
 /**
  * Create restaurant HTML and add it to the webpage
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
-
-  //create a fourite toggle for restaurant
-  
 
 
   const address = document.getElementById('restaurant-address');
@@ -88,7 +109,8 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  DBHelper.fetchReviewsByResId(restaurant.id)
+  .then(reviews => fillReviewsHTML())
 }
 
 /**
@@ -139,13 +161,19 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 
 createReviewHTML = (review) => {
   const li = document.createElement('li');
+  if (!navigator.onLine) {
+    const conn_status = document.createElement('p');
+    conn_status.classList.add('offline_label')
+    conn_status.innerHTML = "Offline"
+    li.classList.add("reviews_offline")
+    li.appendChild(conn_status);
+  }
   const name = document.createElement('p');
-  name.className = 'reviewer-name';
-  name.innerHTML = review.name;
+  name.innerHTML = `Name: ${review.name}`;
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  date.innerHTML = `Date: ${new Date(review.createdAt).toLocaleString()}`;
   li.appendChild(date);
 
   const rating = document.createElement('p');
@@ -157,6 +185,44 @@ createReviewHTML = (review) => {
   li.appendChild(comments);
 
   return li;
+}
+
+// Review form validation and submission
+addReview = () => {
+  event.preventDefault();
+  //pick data from form
+  let restaurantId = getParameterByName('id');
+  let name = document.getElementById('username').value;
+  let comments = document.getElementById('user-review').value;
+  let rating = document.querySelector('#select-rating option:checked').value;
+  const review = [name, rating, comments, restaurantId];
+
+
+// add frontend data
+const frontEndReview = {
+  restaurant_id: parseInt(review[3]),
+  rating: parseInt(review[1]),
+  name: review[0],
+  comments: review[2].substring(0, 300),
+  createdAt: new Date()
+};
+
+//send to backend now
+DBHelper.addReview(frontEndReview);
+addReviewHTML(frontEndReview);
+document.getElementById('review-form').reset();
+}
+
+addReviewHTML = (review) => {
+  if (document.getElementById('no-review')) {
+    document.getElementById('no-review').remove();
+  }
+
+  const container = document.getElementById('reviews-container');
+  const ul = document.getElementById('reviews-list');
+
+  ul.insertBefore(createReviewHTML(review), ul.firstChild);  //add new review to reviews
+  container.appendChild(ul);
 }
 
 /**
@@ -185,36 +251,3 @@ getParameterByName = (name, url) => {
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-// Review form validation and submission
-addReview = () => {
-  event.preventDefault();
-  //pick data from form
-  let restaurantId = getParameterByName('id');
-  let name = document.getElementById('username').value;
-  let rating;
-  let comments = document.getElementById('user-review').value
-  rating = document.querySelector('#select-rating:checked').value;
-  const review = [name, rating, comments, restaurantId];
-
-
-// add frontend data
-const frontEndReview = {
-  restaurant_id: parseInt(review[3]),
-  rating: parseInt(review[1]),
-  name: review[0],
-  comments: review[2].substring(0, 300),
-  createdAt: new Date()
-};
-
-//send to backend now
-DBHelper.addReview(frontEndReview);
-addReviewHTML(frontEndReview);
-document.getElementById('review-form').requestFullscreen();
-}
-
-addReviewHTML = (review) => {
-  if (document.getElementById('no-review')) {
-    document.getElementById('no-review').remove();
-  }
-
-}
