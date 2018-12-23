@@ -1,5 +1,5 @@
 @charset "utf-8";
-@import url(//fonts.googleapis.com/css?family=Open+Sans:600,400&subset=latin,cyrillic);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:600,400&subset=latin,cyrillic);
 /* CSS Document */
 
 body,td,th,p{
@@ -443,6 +443,7 @@ Review Form
 #breadcrumb {
   width: 100%;
   text-align: left;
+  margin-bottom: 10px;
 }
 
 #username,

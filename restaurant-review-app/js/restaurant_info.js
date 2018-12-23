@@ -12,10 +12,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
  * Initialize leaflet map
  */
 initMap = () => {
-  fetchRestaurantFromURL((error, restaurant) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {      
+  fetchRestaurantFromURL()
+    .then(restaurant => {    
       self.newMap = L.map('map', {
         center: [restaurant.latlng.lat, restaurant.latlng.lng],
         zoom: 16,
@@ -31,34 +29,33 @@ initMap = () => {
       }).addTo(newMap);
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.newMap);
-    }
-  });
-}  
+    })
+    .catch(error => console.error(error));
+}
 
 /**
  * Get current restaurant from page URL.
  */
 
-fetchRestaurantFromURL = (callback) => {
+fetchRestaurantFromURL = () => {
   if (self.restaurant) { // restaurant already fetched!
-    callback(null, self.restaurant)
-    return;
+    return Promise.resolve(self.restaurant);
   }
-  const id = getParameterByName('id');
+  const id = parseInt(getParameterByName('id'));
   if (!id) { // no id found in URL
     error = 'No restaurant id in URL'
     callback(error, null);
   } else {
-    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
-      self.restaurant = restaurant;
+    return DBHelper.fetchRestaurantById(id)
+    .then(restaurant => {
       if (!restaurant) {
-        console.error(error);
-        return;
+        return Promise.reject(`Restaurant with ID ${id} was not found`)
       }
+      self.restaurant = restaurant;
       fillRestaurantHTML();
-      callback(null, restaurant)
+      return restaurant;
     });
-  }
+}
 }
 
 /*
@@ -99,7 +96,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img'
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.alt = restaurant.cuisine_type +' image';
+  image.alt = restaurant.name +' image';
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
@@ -110,7 +107,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   }
   // fill reviews
   DBHelper.fetchReviewsByResId(restaurant.id)
-  .then(reviews => fillReviewsHTML())
+  .then(reviews => fillReviewsHTML(reviews))
 }
 
 /**
@@ -144,12 +141,13 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 
   if (!reviews) {
     const noReviews = document.createElement('p');
+    noReviews.id = 'no-review';
     noReviews.innerHTML = 'No reviews yet!';
     container.appendChild(noReviews);
     return;
   }
   const ul = document.getElementById('reviews-list');
-  reviews.forEach(review => {
+  reviews.reverse().forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
   container.appendChild(ul);

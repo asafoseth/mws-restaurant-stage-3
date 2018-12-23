@@ -17,14 +17,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
  * Fetch all neighborhoods and set their HTML.
  */
 fetchNeighborhoods = () => {
-  DBHelper.fetchNeighborhoods((error, neighborhoods) => {
-    if (error) { // Got an error
-      console.error(error);
-    } else {
+  DBHelper.fetchNeighborhoods()
+    .then(neighborhoods => {
       self.neighborhoods = neighborhoods;
       fillNeighborhoodsHTML();
-    }
-  });
+    })
+    .catch(error => console.error(error));
 }
 
 /**
@@ -44,14 +42,12 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
  * Fetch all cuisines and set their HTML.
  */
 fetchCuisines = () => {
-  DBHelper.fetchCuisines((error, cuisines) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      self.cuisines = cuisines;
-      fillCuisinesHTML();
-    }
-  });
+  DBHelper.fetchCuisines()
+  .then(cuisines => {
+    self.cuisines = cuisines;
+    fillCuisinesHTML();
+  })
+  .catch(error => console.log(error));
 }
 
 /**
@@ -103,14 +99,12 @@ updateRestaurants = () => {
   const cuisine = cSelect[cIndex].value;
   const neighborhood = nSelect[nIndex].value;
 
-  DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      resetRestaurants(restaurants);
-      fillRestaurantsHTML();
-    }
+  DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood)
+  .then(restaurants => {
+    resetRestaurants(restaurants);
+    fillRestaurantsHTML();
   })
+  .catch(error => console.error(error));
 }
 
 /**
@@ -150,7 +144,6 @@ createRestaurantHTML = (restaurant) => {
   //Lazy load image to improve app performance
   const image = document.createElement('img');
   image.alt = restaurant.name+' image';
-
   const config = {
     threshold: 0.1
   };
@@ -176,7 +169,7 @@ createRestaurantHTML = (restaurant) => {
         observer.unobserve(change.target);
       }
       else {
-
+        console.log('No observer...');
       }
     });
   }
@@ -226,7 +219,6 @@ changeFavElementClass = (el, fav) => {
     el.classList.add('favorite_no');
     el.setAttribute('aria-label', 'mark as favorite');
   } else {
-    console.log('toggle yes upd');
     el.classList.remove('favorite_no');
     el.classList.add('favorite_yes');
     el.setAttribute('aria-label', 'remove as favorite');
