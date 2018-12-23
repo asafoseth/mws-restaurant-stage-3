@@ -13,9 +13,9 @@
         "type": "image/png"
       }
     ],
-    "start_url": "/mws-restaurant-stage-2/index.html",
+    "start_url": "index.html",
     "background_color": "#252831",
     "display": "standalone",
-    "scope": "/mws-restaurant-stage-2/",
+    "scope": "/restaurant-review-app/",
     "theme_color": "#317EFB"
   }
